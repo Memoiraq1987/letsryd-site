@@ -110,7 +110,7 @@
       <input id="email" type="email" placeholder="you@email.com" required aria-label="email" />
       <button type="submit">Hold my spot</button>
     </form>
-    <div class="proof">🦦 <b id="count">1,000</b> Seattleites already holding the line · no spam, just the secret</div>
+    <div class="proof">🦦 <b id="count">0</b> Seattleites already in · no spam, just the secret</div>
   </div>
 
   <div class="right">
@@ -125,12 +125,11 @@
 <div class="scrim" id="scrim">
   <div class="modal">
     <button class="mClose" id="mClose">✕</button>
-    <div style="font-size:38px">🦦</div>
-    <h3>You're IN.</h3>
-    <div class="pos" id="mPos">#1,001</div>
-    <p>Welcome to the crew. The otters ahead of you are very smug. Want to pass them?</p>
+    <div style="font-size:48px">🦦</div>
+    <h3 id="mTitle">You're IN! 🎉</h3>
+    <p id="mMsg">Welcome to the crew. A unique code for the deal is coming to your inbox <b style="color:var(--green)">soon</b> — keep an eye out. 💙</p>
     <div class="reflink"><input id="refUrl" readonly /><button id="copyBtn">Copy</button></div>
-    <p style="font-size:12.5px;color:var(--muted);margin-top:8px">Every friend who joins with your link moves you <b style="color:var(--green)">up the line</b>.</p>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px">Know a Seattleite who'd love this? Send them the link. 🦦</p>
     <div class="shareRow" id="shareRow"></div>
   </div>
 </div>
@@ -190,19 +189,24 @@
   chips.forEach(function(t){var c=document.createElement('button');c.className='chip';c.textContent=t;c.onclick=function(){say('🦦 …',900);setTimeout(function(){say(answer(t),3200,true);},520);};ce.appendChild(c);});
 
   // waitlist
-  var BASECOUNT=1000;
-  function fmt(n){return n.toLocaleString();}
-  function localJoin(email){var n=parseInt(localStorage.getItem('ryd_n')||'237',10);if(!localStorage.getItem('ryd_joined')){n+=1;localStorage.setItem('ryd_n',n);localStorage.setItem('ryd_joined',email);}var code=localStorage.getItem('ryd_code');if(!code){code=Math.random().toString(36).slice(2,8).toUpperCase();localStorage.setItem('ryd_code',code);}return Promise.resolve({position:BASECOUNT+n-Math.floor(Math.random()*40),code:code,count:BASECOUNT+n});}
+  function fmt(n){return (n||0).toLocaleString();}
   function refOf(){try{return new URLSearchParams(location.search).get('r')||'';}catch(e){return '';}}
-  function join(email){return fetch(BASE+'/api/waitlist/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,ref:refOf(),source:'teaser'})}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){if(!d||d.position==null)throw 0;return d;}).catch(function(){return localJoin(email);});}
+  // graceful offline fallback — also dedupes by stored email
+  function localJoin(email){email=(email||'').trim().toLowerCase();var prev=(localStorage.getItem('ryd_email')||'');var isNew=prev!==email;try{localStorage.setItem('ryd_email',email);}catch(e){}var n=parseInt(localStorage.getItem('ryd_count')||'0',10);if(isNew){n+=1;try{localStorage.setItem('ryd_count',n);}catch(e){}}var code=localStorage.getItem('ryd_code');if(!code){code=Math.random().toString(36).slice(2,8).toUpperCase();try{localStorage.setItem('ryd_code',code);}catch(e){}}return Promise.resolve({ok:true,isNew:isNew,count:n,code:code});}
+  function join(email){return fetch(BASE+'/api/waitlist/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,ref:refOf(),source:'teaser'})}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){if(!d||d.ok===false||d.count==null)throw 0;return d;}).catch(function(){return localJoin(email);});}
+  function loadCount(){var el=document.getElementById('count');fetch(BASE+'/api/waitlist/count').then(function(r){return r.json();}).then(function(d){if(d&&d.count!=null)el.textContent=fmt(d.count);}).catch(function(){try{el.textContent=fmt(parseInt(localStorage.getItem('ryd_count')||'0',10));}catch(e){}});}
+  loadCount();
   function confetti(){var c=['#6E9BFF','#34E39B','#9FF3CE','#8FB4F7','#fff'];for(var i=0;i<80;i++){(function(k){var d=document.createElement('div');d.className='conf';d.style.left=Math.random()*100+'vw';d.style.background=c[k%c.length];document.body.appendChild(d);var dx=(Math.random()-.5)*160;d.animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:'translate('+dx+'px,'+(innerHeight+40)+'px) rotate('+Math.random()*720+'deg)',opacity:.9}],{duration:1600+Math.random()*900,easing:'cubic-bezier(.3,.7,.5,1)'}).onfinish=function(){d.remove();};})(i);}}
   var scrim=document.getElementById('scrim');
   function copyRef(){var i=document.getElementById('refUrl');i.select();try{navigator.clipboard.writeText(i.value);}catch(e){}document.getElementById('copyBtn').textContent='Copied ✓';setTimeout(function(){document.getElementById('copyBtn').textContent='Copy';},1500);}
   document.getElementById('copyBtn').onclick=copyRef;
   document.getElementById('mClose').onclick=function(){scrim.classList.remove('on');};
   scrim.addEventListener('click',function(e){if(e.target===scrim)scrim.classList.remove('on');});
-  function openWin(d){document.getElementById('mPos').textContent='#'+fmt(d.position);document.getElementById('count').textContent=fmt(d.count||1238);var url=SITE+'/?r='+(d.code||'RYDER');document.getElementById('refUrl').value=url;
-    var txt=encodeURIComponent("I'm on RYDER's list 🦦 Seattle's worst-kept secret. Grab your spot:");var share=document.getElementById('shareRow');share.innerHTML='';
+  function openWin(d){var isNew=d.isNew!==false;
+    document.getElementById('mTitle').textContent=isNew?"You're IN! 🎉":"You're already in! 🦦";
+    document.getElementById('mMsg').innerHTML=isNew?"Welcome to the crew. A unique code for the deal is coming to your inbox <b style=\"color:var(--green)\">soon</b> — keep an eye out. 💙":"You're already on the list — no need to sign up twice. Your code's coming soon. 😉";
+    if(d.count!=null)document.getElementById('count').textContent=fmt(d.count);var url=SITE+'/?r='+(d.code||'RYDER');document.getElementById('refUrl').value=url;
+    var txt=encodeURIComponent("I just joined RYDER 🦦 Seattle's worst-kept secret. Get in:");var share=document.getElementById('shareRow');share.innerHTML='';
     [['Text',"sms:&body="+txt+"%20"+encodeURIComponent(url)],['Share on X',"https://twitter.com/intent/tweet?text="+txt+"&url="+encodeURIComponent(url)],['Copy link','#']].forEach(function(s){var a=document.createElement('a');a.textContent=s[0];if(s[1]==='#'){a.onclick=function(e){e.preventDefault();copyRef();};}else{a.href=s[1];a.target='_blank';}share.appendChild(a);});
     scrim.classList.add('on');set('jump',2600);confetti();}
   document.getElementById('capForm').addEventListener('submit',function(e){e.preventDefault();var email=document.getElementById('email').value.trim();if(!email)return;var b=this.querySelector('button');b.textContent='…';join(email).then(function(d){b.textContent='Hold my spot';document.getElementById('email').value='';openWin(d);});});
