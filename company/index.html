@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>RYD LLC · Company</title>
+<meta name="description" content="RYD LLC is a Seattle company building RYD, a rideshare app for Seattle." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{--page:#070C16;--soft:#15213A;--card:#0E1626;--ink:#EDF3FB;--muted:#93A2BC;--line:rgba(255,255,255,.10);--blue:#6E9BFF;--blue2:#2F6BE6}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--page);color:var(--ink);font:16px/1.65 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 48px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+  .brand{font:900 34px/1 "Barlow Condensed",Inter,sans-serif;letter-spacing:.5px;color:#fff;text-decoration:none}
+  .brand b{color:var(--blue);text-shadow:0 0 18px rgba(110,155,255,.55)}
+  .brand:hover{text-decoration:none}
+  .tag{font-size:13px;color:var(--muted)}
+  h1{font:800 clamp(34px,6vw,52px)/1.05 "Barlow Condensed",Inter,sans-serif;letter-spacing:.3px;margin:40px 0 14px}
+  h2{font:800 24px/1.2 "Barlow Condensed",Inter,sans-serif;letter-spacing:.3px;margin:36px 0 10px}
+  p{margin:0 0 14px;color:#D4DEEC}
+  .lede{font-size:18px;color:var(--ink)}
+  ul.points{margin:4px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+  ul.points li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  ul.points b{color:#fff}
+  dl.facts{display:grid;grid-template-columns:max-content 1fr;gap:10px 22px;margin:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  dl.facts dt{color:var(--muted)}
+  dl.facts dd{margin:0;color:#fff}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+  footer nav{display:flex;gap:18px;flex-wrap:wrap}
+  @media (max-width:520px){dl.facts{grid-template-columns:1fr;gap:2px}dl.facts dd{margin-bottom:10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/company/" aria-label="RYD">RY<b>D</b></a>
+    <span class="tag">RYD LLC · Seattle, Washington</span>
+  </header>
+
+  <main>
+    <h1>A rideshare app built in Seattle, for Seattle.</h1>
+    <p class="lede">RYD LLC is a Washington company building <b>RYD</b>, a rideshare app for the Seattle area.</p>
+
+    <h2>What we're building</h2>
+    <ul class="points">
+      <li><b>RYD for riders.</b> Request a ride, see the price before you book, and follow your driver to the pickup.</li>
+      <li><b>RYD for drivers.</b> Local drivers accept trips and see what they earn on every ride.</li>
+    </ul>
+
+    <h2>Where we are</h2>
+    <p>RYD is preparing to launch in Seattle in 2027. We'll start offering rides once we hold the required Washington State, King County and City of Seattle licences.</p>
+
+    <h2>Company details</h2>
+    <dl class="facts">
+      <dt>Legal name</dt><dd>RYD LLC</dd>
+      <dt>Company type</dt><dd>Washington limited liability company</dd>
+      <dt>Based in</dt><dd>Seattle, Washington, USA</dd>
+      <dt>Email</dt><dd><a href="mailto:hello@letsryd.com">hello@letsryd.com</a></dd>
+      <dt>Website</dt><dd><a href="https://letsryd.com">letsryd.com</a></dd>
+    </dl>
+  </main>
+
+  <footer>
+    <span>© 2026 RYD LLC · Seattle, Washington</span>
+    <nav><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms of Use</a><a href="mailto:hello@letsryd.com">Contact</a></nav>
+  </footer>
+</div>
+</body>
+</html>
